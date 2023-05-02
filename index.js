@@ -1,10 +1,11 @@
 import calc from "./logic.js";
 
 const state = {
-  prev: 0,
-  next: 0,
+  prev: null,
+  next: null,
   sign: null,
-  decimal: false,
+  pDec: false,
+  nDec: false,
   result: 0,
 };
 
@@ -14,15 +15,30 @@ const setState = (newstate) => {
 
 const addNumber = (num) => {
   if (state.sign) {
-    state.next
-      ? setState({ next: parseFloat(`${state.next}${num}`) })
+    state.next != null
+      ? setState({ next: `${state.next}${num}` })
       : setState({ next: num });
   } else {
-    state.prev
-      ? setState({ prev: parseFloat(`${state.prev}${num}`) })
+    state.prev != null
+      ? setState({ prev: `${state.prev}${num}` })
       : setState({ prev: num });
   }
   display();
+  console.log(state);
+};
+
+const addDecimal = () => {
+  if (state.sign) {
+    state.next != null
+      ? !state.nDec && setState({ next: `${state.next}.`, nDec: true })
+      : !state.nDec && setState({ next: "0.", nDec: true });
+  } else {
+    state.prev != null
+      ? !state.pDec && setState({ prev: `${state.prev}.`, pDec: true })
+      : !state.pDec && setState({ prev: "0.", pDec: true });
+  }
+  display();
+  console.log(state);
 };
 
 const addSign = (sign) => {
@@ -30,9 +46,9 @@ const addSign = (sign) => {
     if (state.next) {
       const res = calc(state.prev, state.sign, state.next);
       setState({
-        prev: res,
-        next: 0,
-        sign: res > 0 ? sign : null,
+        prev: typeof(res) == 'number' ? res : null,
+        next: null,
+        sign: !!res ? sign : null,
         result: res,
       });
     } else setState({ sign });
@@ -43,6 +59,7 @@ const addSign = (sign) => {
 };
 
 const numbers = document.querySelectorAll(".num"); // nums from 0 to 9
+const decimal = document.querySelector(".dec");
 const signs = document.querySelectorAll(".sign");
 const equal = document.querySelector(".eql");
 const clear = document.querySelector(".clear");
@@ -54,33 +71,43 @@ result.textContent = state.result;
 
 const display = () => {
   const { prev, next, sign } = state;
-  const first = prev ? `${prev}` : "";
-  const sec = next ? `${next}` : "";
+  const first = prev != null ? `${prev}` : "";
+  const sec = next != null ? `${next}` : "";
   const op = sign ? `${sign}` : "";
   operation.innerHTML = `${first}${op}${sec}`;
   result.textContent = state.result;
 };
 
 numbers.forEach((num) => {
-  num.addEventListener("click", () => addNumber(parseInt(num.innerHTML)));
+  num.addEventListener("click", () => addNumber(num.innerHTML));
 });
+
+decimal.addEventListener("click", () => addDecimal());
 
 signs.forEach((sign) => {
   sign.addEventListener("click", () => addSign(sign.innerHTML));
 });
 
-equal.addEventListener('click', () => {
+equal.addEventListener("click", () => {
   const res = calc(state.prev, state.sign, state.next);
-  setState({ prev: 0, next: 0, sign: null, result: res });
+  setState({
+    prev: null,
+    next: null,
+    sign: null,
+    pDec: false,
+    nDec: false,
+    result: res,
+  });
   display();
 });
 
-clear.addEventListener('click', () => {
+clear.addEventListener("click", () => {
   setState({
-    prev: 0,
-    next: 0,
+    prev: null,
+    next: null,
     sign: null,
-    decimal: false,
+    pDec: false,
+    nDec: false,
     result: 0,
   });
   display();
