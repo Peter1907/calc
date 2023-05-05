@@ -1,4 +1,4 @@
-import calc from "./logic.js";
+import calc from './logic.js';
 
 const state = {
   prev: null,
@@ -31,11 +31,11 @@ const addDecimal = () => {
   if (state.sign) {
     state.next != null
       ? !state.nDec && setState({ next: `${state.next}.`, nDec: true })
-      : !state.nDec && setState({ next: "0.", nDec: true });
+      : !state.nDec && setState({ next: '0.', nDec: true });
   } else {
     state.prev != null
       ? !state.pDec && setState({ prev: `${state.prev}.`, pDec: true })
-      : !state.pDec && setState({ prev: "0.", pDec: true });
+      : !state.pDec && setState({ prev: '0.', pDec: true });
   }
   display();
   console.log(state);
@@ -46,7 +46,7 @@ const addSign = (sign) => {
     if (state.next) {
       const res = calc(state.prev, state.sign, state.next);
       setState({
-        prev: typeof(res) == 'number' ? res : null,
+        prev: typeof res == 'number' ? res : null,
         next: null,
         sign: !!res ? sign : null,
         result: res,
@@ -58,37 +58,37 @@ const addSign = (sign) => {
   display();
 };
 
-const numbers = document.querySelectorAll(".num"); // nums from 0 to 9
-const decimal = document.querySelector(".dec");
-const signs = document.querySelectorAll(".sign");
-const equal = document.querySelector(".eql");
-const clear = document.querySelector(".clear");
-const del = document.querySelector(".del");
-const np = document.querySelector(".np"); // for the negative/positive button
-const operation = document.querySelector(".operation"); // for the calc display
-const result = document.querySelector(".result");
+const numbers = document.querySelectorAll('.num'); // nums from 0 to 9
+const decimal = document.querySelector('.dec');
+const signs = document.querySelectorAll('.sign');
+const equal = document.querySelector('.eql');
+const clear = document.querySelector('.clear');
+const del = document.querySelector('.del');
+const np = document.querySelector('.np'); // for the negative/positive button
+const operation = document.querySelector('.operation'); // for the calc display
+const result = document.querySelector('.result');
 result.textContent = state.result;
 
 const display = () => {
   const { prev, next, sign } = state;
-  const first = prev != null ? `${prev}` : "";
-  const sec = next != null ? `${next}` : "";
-  const op = sign ? `${sign}` : "";
+  const first = prev != null ? `${prev}` : '';
+  const sec = next != null ? `${next}` : '';
+  const op = sign ? `${sign}` : '';
   operation.innerHTML = `${first}${op}${sec}`;
   result.textContent = state.result;
 };
 
 numbers.forEach((num) => {
-  num.addEventListener("click", () => addNumber(num.innerHTML));
+  num.addEventListener('click', () => addNumber(num.innerHTML));
 });
 
-decimal.addEventListener("click", () => addDecimal());
+decimal.addEventListener('click', () => addDecimal());
 
 signs.forEach((sign) => {
-  sign.addEventListener("click", () => addSign(sign.innerHTML));
+  sign.addEventListener('click', () => addSign(sign.innerHTML));
 });
 
-equal.addEventListener("click", () => {
+equal.addEventListener('click', () => {
   const res = calc(state.prev, state.sign, state.next);
   setState({
     prev: null,
@@ -101,7 +101,7 @@ equal.addEventListener("click", () => {
   display();
 });
 
-clear.addEventListener("click", () => {
+clear.addEventListener('click', () => {
   setState({
     prev: null,
     next: null,
