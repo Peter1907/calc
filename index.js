@@ -14,6 +14,7 @@ const setState = (newstate) => {
 };
 
 const addNumber = (num) => {
+  if (typeof state.result != 'number') setState({ result: 0 });
   if (state.sign) {
     state.next != null
       ? setState({ next: `${state.next}${num}` })
@@ -42,13 +43,24 @@ const addDecimal = () => {
 };
 
 const addSign = (sign) => {
+  if (state.prev == null && state.result !== 0) {
+    if (typeof(state.result) != 'number') return;
+    const res = state.result;
+    setState({
+      prev: res,
+      sign,
+      pDec: res % Math.floor(res) !== 0,
+    });
+  }
   if (state.sign) {
     if (state.next) {
       const res = calc(state.prev, state.sign, state.next);
       setState({
         prev: typeof res == 'number' ? res : null,
         next: null,
-        sign: !!res ? sign : null,
+        sign: typeof res == 'number' ? sign : null,
+        pDec: res % Math.floor(res) !== 0,
+        nDec: false,
         result: res,
       });
     } else setState({ sign });
@@ -56,6 +68,7 @@ const addSign = (sign) => {
     state.prev ? setState({ sign }) : null;
   }
   display();
+  console.log(state);
 };
 
 const numbers = document.querySelectorAll('.num'); // nums from 0 to 9
