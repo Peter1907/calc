@@ -4,8 +4,8 @@ const state = {
   prev: null,
   next: null,
   operator: null,
-  pDec: false,
-  nDec: false,
+  pDec: false, // first num has a decimal point
+  nDec: false, // second num
   result: 0,
 };
 
@@ -44,7 +44,7 @@ const addDecimal = () => {
 
 const addOperator = (operator) => {
   if (state.prev == null && state.result !== 0) {
-    if (typeof(state.result) != 'number') return;
+    if (typeof state.result != 'number') return;
     const res = state.result;
     setState({
       prev: res.toString(),
@@ -71,13 +71,26 @@ const addOperator = (operator) => {
   console.log(state);
 };
 
+const changeSign = () => {
+  if (state.operator) {
+    if (state.next != null) {
+      setState({ next: (parseFloat(state.next) / -1).toString() });
+    }
+  } else {
+    if (state.prev != null) {
+      setState({ prev: (parseFloat(state.prev) / -1).toString() });
+    }
+  }
+  display();
+};
+
 const numbers = document.querySelectorAll('.num'); // nums from 0 to 9
 const decimal = document.querySelector('.dec');
 const operators = document.querySelectorAll('.op');
 const equal = document.querySelector('.eql');
 const clear = document.querySelector('.clear');
 const del = document.querySelector('.del');
-const np = document.querySelector('.np'); // for the negative/positive button
+const sign = document.querySelector('.sign'); // for the negative/positive button
 const operation = document.querySelector('.operation'); // for the calc display
 const result = document.querySelector('.result');
 result.textContent = state.result;
@@ -100,6 +113,8 @@ decimal.addEventListener('click', () => addDecimal());
 operators.forEach((operator) => {
   operator.addEventListener('click', () => addOperator(operator.innerHTML));
 });
+
+sign.addEventListener('click', () => changeSign());
 
 equal.addEventListener('click', () => {
   const res = calc(state.prev, state.operator, state.next);
