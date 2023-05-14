@@ -56,7 +56,7 @@ const addOperator = (operator) => {
     if (state.next) {
       const res = calc(state.prev, state.operator, state.next);
       setState({
-        prev: typeof res == 'number' ? res : null,
+        prev: typeof res == 'number' ? res.toString() : null,
         next: null,
         operator: typeof res == 'number' ? operator : null,
         pDec: res % Math.floor(res) !== 0,
@@ -79,6 +79,24 @@ const changeSign = () => {
   } else {
     if (state.prev != null) {
       setState({ prev: (parseFloat(state.prev) / -1).toString() });
+    }
+  }
+  display();
+};
+
+const handleDelete = () => {
+  const { prev, next, operator } = state;
+  if (operator) {
+    if (next != null) {
+      next.length === 1
+        ? setState({ next: null })
+        : setState({ next: next.slice(0, -1) });
+    } else setState({ operator: null });
+  } else {
+    if (prev != null) {
+      prev.length === 1
+        ? setState({ prev: null })
+        : setState({ prev: prev.slice(0, -1) });
     }
   }
   display();
@@ -108,13 +126,15 @@ numbers.forEach((num) => {
   num.addEventListener('click', () => addNumber(num.innerHTML));
 });
 
-decimal.addEventListener('click', () => addDecimal());
+decimal.addEventListener('click', addDecimal);
 
 operators.forEach((operator) => {
   operator.addEventListener('click', () => addOperator(operator.innerHTML));
 });
 
-sign.addEventListener('click', () => changeSign());
+sign.addEventListener('click', changeSign);
+
+del.addEventListener('click', handleDelete);
 
 equal.addEventListener('click', () => {
   const res = calc(state.prev, state.operator, state.next);
