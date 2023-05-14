@@ -1,3 +1,4 @@
+import './style.css';
 import calc from './logic.js';
 
 const state = {
