@@ -26,7 +26,6 @@ const addNumber = (num) => {
       : setState({ prev: num });
   }
   display();
-  console.log(state);
 };
 
 const addDecimal = () => {
@@ -40,7 +39,6 @@ const addDecimal = () => {
       : !state.pDec && setState({ prev: '0.', pDec: true });
   }
   display();
-  console.log(state);
 };
 
 const addOperator = (operator) => {
@@ -69,7 +67,6 @@ const addOperator = (operator) => {
     state.prev ? setState({ operator }) : null;
   }
   display();
-  console.log(state);
 };
 
 const changeSign = () => {
@@ -89,15 +86,23 @@ const handleDelete = () => {
   const { prev, next, operator } = state;
   if (operator) {
     if (next != null) {
+      const newNum = next.slice(0, -1);
       next.length === 1
         ? setState({ next: null })
-        : setState({ next: next.slice(0, -1) });
+        : setState({
+            next: newNum,
+            nDec: newNum.includes('.') ? true : false,
+          });
     } else setState({ operator: null });
   } else {
     if (prev != null) {
+      const newNum = prev.slice(0, -1);
       prev.length === 1
         ? setState({ prev: null })
-        : setState({ prev: prev.slice(0, -1) });
+        : setState({
+            prev: newNum,
+            pDec: newNum.includes('.') ? true : false,
+          });
     }
   }
   display();
