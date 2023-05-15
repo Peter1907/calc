@@ -108,6 +108,31 @@ const handleDelete = () => {
   display();
 };
 
+const handleEqual = () => {
+  const res = calc(state.prev, state.operator, state.next);
+  setState({
+    prev: null,
+    next: null,
+    operator: null,
+    pDec: false,
+    nDec: false,
+    result: res,
+  });
+  display();
+};
+
+const handleClear = () => {
+  setState({
+    prev: null,
+    next: null,
+    operator: null,
+    pDec: false,
+    nDec: false,
+    result: 0,
+  });
+  display();
+};
+
 const numbers = document.querySelectorAll('.num'); // nums from 0 to 9
 const decimal = document.querySelector('.dec');
 const operators = document.querySelectorAll('.op');
@@ -142,27 +167,21 @@ sign.addEventListener('click', changeSign);
 
 del.addEventListener('click', handleDelete);
 
-equal.addEventListener('click', () => {
-  const res = calc(state.prev, state.operator, state.next);
-  setState({
-    prev: null,
-    next: null,
-    operator: null,
-    pDec: false,
-    nDec: false,
-    result: res,
-  });
-  display();
-});
+equal.addEventListener('click', handleEqual);
 
-clear.addEventListener('click', () => {
-  setState({
-    prev: null,
-    next: null,
-    operator: null,
-    pDec: false,
-    nDec: false,
-    result: 0,
-  });
-  display();
+clear.addEventListener('click', handleClear);
+
+// Bind keys to the calculator
+window.addEventListener('keydown', (e) => {
+  e.preventDefault();
+  const { key } = e;
+  const numRegex = /\d/;
+  const opRegex = /[+\-*/]/;
+
+  if (numRegex.test(key)) addNumber(key);
+  else if (opRegex.test(key)) addOperator(key);
+  else if (key === '.') addDecimal();
+  else if (key === 'Enter' || key === '=') handleEqual();
+  else if (key === 'Backspace') handleDelete();
+  else if (key === 'Escape') handleClear();
 });
