@@ -178,7 +178,7 @@ window.addEventListener('keydown', (e) => {
   const numRegex = /\d/;
   const opRegex = /[+\-*/]/;
 
-  if (numRegex.test(key)) addNumber(key);
+  if (numRegex.test(key) && key[0] !== 'F') addNumber(key);
   else if (opRegex.test(key)) addOperator(key);
   else if (key === '.') addDecimal();
   else if (key === 'Enter' || key === '=') handleEqual();
